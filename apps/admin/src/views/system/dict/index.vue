@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import type { DictTypeEntity, DictTypeQueryParams } from '@/types'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { DictRequest } from '@/api/system/dict.request'
 import { TipModal } from '@/utils'
 

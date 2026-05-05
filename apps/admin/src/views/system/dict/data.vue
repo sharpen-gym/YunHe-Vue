@@ -98,7 +98,7 @@
 
 <script setup lang="ts">
 import { TipModal } from '@/utils'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { DictRequest } from '@/api/system/dict.request'
 import type { DictDataEntity, DictDataQueryParams, DictTypeEntity } from '@/types'
 

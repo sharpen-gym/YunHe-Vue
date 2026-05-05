@@ -1,6 +1,7 @@
 export * from './tree.util'
 export * from './cache.util'
 export * from './common.util'
+export * from './browser.util'
 export * from './validate.util'
 export * from './tip-modal.util'
 

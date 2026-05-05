@@ -1,3 +1,5 @@
+export * from '@/components/ProTable/types'
+
 export * from './api/auth'
 export * from './api/common/upload'
 export * from './api/system/user'
@@ -12,3 +14,5 @@ export * from './api/monitor/operlog'
 export * from './api/monitor/online'
 export * from './api/monitor/logininfor'
 export * from './api/monitor/health'
+
+export * from './utils/browser.util'

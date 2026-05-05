@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import type { JobLogEntity, JobLogQueryParams } from '@/types'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { JobLogRequest } from '@/api/monitor/job-log.request'
 import { linkDownload, TipModal } from '@/utils'
 import JobLogDetailDialog from './detail.vue'

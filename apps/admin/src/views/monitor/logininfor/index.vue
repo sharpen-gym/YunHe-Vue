@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { linkDownload, TipModal } from '@/utils'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { LogininforRequest } from '@/api/monitor/logininfor.request'
 import type { LogininfoEntity, LogininforQueryParams } from '@/types'
 

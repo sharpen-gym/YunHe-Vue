@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import type { UserEntity, UserQueryParams } from '@/types'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { UserRequest } from '@/api/system/user.request'
 import { TipModal } from '@/utils'
 import UserDialog from './components/UserDialog.vue'

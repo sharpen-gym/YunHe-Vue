@@ -1,7 +1,7 @@
 import { LoginDto } from './auth.dto'
 import { JwtService } from '@nestjs/jwt'
-import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { Injectable, Logger } from '@nestjs/common'
 import { formatTime, verifyPassword } from '@/utils'
 import { RedisService } from '@/shared/redis.service'
 import { CaptchaService } from '@/shared/captcha.service'
@@ -12,6 +12,8 @@ import { BusinessException, CommonConstant, ConfigConstant, RedisConstant } from
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name)
+
   constructor(
     private readonly logService: LogService,
     private readonly jwtService: JwtService,
@@ -89,8 +91,11 @@ export class AuthService {
     try {
       const payload: AuthType.JwtPayload = this.jwtService.verify(token)
       const keys = await this.redisService.keys(`*${payload.userId}*`)
-      if (!keys.length) await this.redisService.del(keys)
-    } catch (error) {}
+      if (keys.length) await this.redisService.del(keys)
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : '退出登录失败'
+      this.logger.error(errorMsg)
+    }
     return `退出登录成功`
   }
 

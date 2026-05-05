@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { TipModal } from '@/utils'
 import type { CacheName } from '@/types'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { CacheRequest } from '@/api/monitor/cache.request'
 
 /** 缓存名称列表 */

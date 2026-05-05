@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { TipModal } from '@/utils'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { OnlineRequest } from '@/api/monitor/online.request'
 import type { OnlineEntity, OnlineQueryParams } from '@/types'
 

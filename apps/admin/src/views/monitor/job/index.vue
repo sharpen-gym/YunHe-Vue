@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import type { JobEntity, JobQueryParams } from '@/types'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import { JobRequest } from '@/api/monitor/job.request'
 import { TipModal } from '@/utils'
 import JobDialog from './components/JobDialog.vue'

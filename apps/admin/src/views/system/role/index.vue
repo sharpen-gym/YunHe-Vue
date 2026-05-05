@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { TipModal } from '@/utils'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import RoleDialog from './components/RoleDialog.vue'
 import { RoleRequest } from '@/api/system/role.request'
 import type { RoleEntity, RoleQueryParams } from '@/types'

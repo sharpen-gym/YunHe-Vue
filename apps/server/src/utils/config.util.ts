@@ -65,21 +65,26 @@ export function configuration() {
 }
 
 function adaptDockerEnv(finalConfig: Record<string, any>) {
+  // 从环境变量中获取数据库配置
   const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DATABASE } = process.env
   if (MYSQL_USERNAME) finalConfig.database.username = MYSQL_USERNAME
   if (MYSQL_PASSWORD) finalConfig.database.password = MYSQL_PASSWORD
   if (MYSQL_DATABASE) finalConfig.database.database = MYSQL_DATABASE
-
+  // 从环境变量中获取 Redis 配置
   const { REDIS_PASSWORD } = process.env
   if (REDIS_PASSWORD) finalConfig.redis.password = REDIS_PASSWORD
-
+  // 从环境变量中获取 JWT 配置
+  const { JWT_SECRET, JWT_EXPIRES_IN } = process.env
+  if (JWT_SECRET) finalConfig.jwt.secret = JWT_SECRET
+  if (JWT_EXPIRES_IN) finalConfig.jwt.expiresIn = Number(JWT_EXPIRES_IN)
+  // 从环境变量中获取邮箱配置
   const { EMAIL_FROM, EMAIL_HOST, EMAIL_PORT, EMAIL_CODE, EMAIL_SECURE } = process.env
   if (EMAIL_FROM) finalConfig.email.from = EMAIL_FROM
   if (EMAIL_HOST) finalConfig.email.host = EMAIL_HOST
   if (EMAIL_PORT) finalConfig.email.port = Number(EMAIL_PORT)
   if (EMAIL_CODE) finalConfig.email.code = EMAIL_CODE
   if (EMAIL_SECURE) finalConfig.email.secure = EMAIL_SECURE === 'true'
-
+  // 从环境变量中获取 OpenAI API 配置
   const { OPENAI_API_KEY, OPENAI_API_MODEL, OPENAI_API_BASE_URL, OPENAI_API_TEMPERATURE, OPENAI_API_MAX_TOKENS } = process.env
   if (OPENAI_API_KEY) finalConfig.openai.apiKey = OPENAI_API_KEY
   if (OPENAI_API_MODEL) finalConfig.openai.model = OPENAI_API_MODEL

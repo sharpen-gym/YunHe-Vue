@@ -63,7 +63,7 @@
 import type { MenuEntity, MenuQueryParams, MenuTreeEntity } from '@/types'
 import { isExternal, listToTree, TipModal } from '@/utils'
 import { MenuRequest } from '@/api/system/menu.request'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import MenuDialog from './components/MenuDialog.vue'
 
 /** 菜单对话框实例 */

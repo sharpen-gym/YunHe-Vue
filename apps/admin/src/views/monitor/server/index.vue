@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { TipModal } from '@/utils'
 import { ServerRequest } from '@/api/monitor/server.request'
-import type { ProTableColumn } from '@/components'
+import type { ProTableColumn } from '@/types'
 import type { DiskInfo } from '@/types'
 
 const cpus = ref<{ label: string; value: any }[]>([])
