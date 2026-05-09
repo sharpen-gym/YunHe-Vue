@@ -53,6 +53,7 @@ services:
     container_name: mysql
     restart: always
     environment:
+      - TZ=Asia/Shanghai # 设置时区为东八区
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     # ports:

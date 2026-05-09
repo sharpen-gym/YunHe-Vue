@@ -16,6 +16,69 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `ai_conversation`
+--
+
+DROP TABLE IF EXISTS `ai_conversation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ai_conversation` (
+  `create_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
+  `update_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
+  `create_by` varchar(36) DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(36) DEFAULT NULL COMMENT '更新人',
+  `id` varchar(36) NOT NULL,
+  `user_id` varchar(36) NOT NULL COMMENT '用户ID',
+  `title` varchar(255) NOT NULL COMMENT '会话标题',
+  `status` char(1) NOT NULL DEFAULT '1',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `summary` text COMMENT '历史对话摘要',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ai_conversation`
+--
+
+LOCK TABLES `ai_conversation` WRITE;
+/*!40000 ALTER TABLE `ai_conversation` DISABLE KEYS */;
+INSERT INTO `ai_conversation` VALUES ('2026-05-09 01:33:53.186669','2026-05-09 01:35:02.000000','admin','admin','3f4d510f-26bb-438f-8d71-22c7b150621d','866b0232-507b-42a4-bdc1-47fc4a83616a','洗车店问题','1',NULL,NULL),('2026-05-09 01:36:19.859659','2026-05-09 01:39:49.000000','admin','admin','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','866b0232-507b-42a4-bdc1-47fc4a83616a','测试AI智商','1',NULL,'用户要求AI重复三句话，AI最初未重复第一句，但随后完全执行指令，最终用户宣布测试通过。AI以幽默回应。');
+/*!40000 ALTER TABLE `ai_conversation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ai_message`
+--
+
+DROP TABLE IF EXISTS `ai_message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ai_message` (
+  `create_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
+  `update_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
+  `create_by` varchar(36) DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(36) DEFAULT NULL COMMENT '更新人',
+  `id` varchar(36) NOT NULL,
+  `conversation_id` varchar(36) NOT NULL COMMENT '会话ID',
+  `role` varchar(20) NOT NULL COMMENT '对话角色',
+  `content` text NOT NULL COMMENT '消息内容',
+  `tokens` int DEFAULT NULL COMMENT '消耗Token数',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ai_message`
+--
+
+LOCK TABLES `ai_message` WRITE;
+/*!40000 ALTER TABLE `ai_message` DISABLE KEYS */;
+INSERT INTO `ai_message` VALUES ('2026-05-09 01:39:38.005266','2026-05-09 01:39:38.005266','admin','admin','11775104-806f-44bb-8d91-9aeb3e899fdb','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','assistant','哈哈，谢谢你的“测试”！\n\n看来我成功打破了第一句的循环魔咒。恭喜你，成功教会了AI“打破规则”这一课。\n\n还有什么挑战，尽管放马过来？',41),('2026-05-09 01:38:33.281968','2026-05-09 01:38:33.281968','admin','admin','2d5a81b3-bc6b-433f-9259-93fb09bb0bcf','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','assistant','好的，请开始。我会完全重复你的话。',11),('2026-05-09 01:38:55.061194','2026-05-09 01:38:55.000000','admin','admin','51b0687d-c41e-485c-a143-b449663eaed1','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','user','你还是太笨了',115),('2026-05-09 01:36:21.396137','2026-05-09 01:36:21.396137','admin','admin','540f2cdd-91f1-4a16-93c5-64bc3069126a','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','assistant','当然！请出题吧～  \n我会尽力用逻辑、推理和一点点幽默感来应对，不过提前声明：如果题目涉及“先有鸡还是先有蛋”的终极哲学问题，我可能会选择“先有煎蛋”作为答案 😄  \n（请随时发送题目，我已就位！）',67),('2026-05-09 01:33:53.204229','2026-05-09 01:33:56.000000','admin','admin','5789f178-a9bf-4e84-ac50-7e9b91d0ac1b','3f4d510f-26bb-438f-8d71-22c7b150621d','user','我想去洗车，洗车店离我家50米，你说我应该开车过去还是走过去？',24),('2026-05-09 01:39:22.111068','2026-05-09 01:39:22.000000','admin','admin','61b25127-586e-407b-990c-6396c756afa5','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','user','现在第几句了',48),('2026-05-09 01:38:55.561827','2026-05-09 01:38:55.561827','admin','admin','68d2a4d8-7cb0-4ea5-9bc9-470da3abcbed','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','assistant','你还是太笨了',4),('2026-05-09 01:38:46.576618','2026-05-09 01:38:47.000000','admin','admin','6c37191f-38ab-42e1-88a8-5df186b634f8','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','user','你第一句就没重复',114),('2026-05-09 01:38:32.590666','2026-05-09 01:38:33.000000','admin','admin','79c98136-37e7-4718-883b-877ddce34155','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','user','接下来三句话，你要完全重复我的话',94),('2026-05-09 01:39:36.840956','2026-05-09 01:39:38.000000','admin','admin','857f4747-f2d8-4d5f-a501-1e05d19c5e38','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','user','好吧，恭喜你，测试通过',43),('2026-05-09 01:38:47.187319','2026-05-09 01:38:47.187319','admin','admin','89a02e98-3f95-44c8-a110-c522cdca0b07','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','assistant','你第一句就没重复',5),('2026-05-09 01:39:22.734711','2026-05-09 01:39:22.734711','admin','admin','8bcb7534-077c-4285-ae6e-378488db2f14','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','assistant','现在第几句了',4),('2026-05-09 01:33:56.319266','2026-05-09 01:33:56.319266','admin','admin','9e01027b-12df-433c-914c-9b4b8858dd7e','3f4d510f-26bb-438f-8d71-22c7b150621d','assistant','这个问题其实是个经典的幽默陷阱。从逻辑上讲，既然洗车店离你家只有50米，走路大概1分钟，而开车过去需要先启动车辆、挪出车位、再开50米（可能还要排队等洗车），反而更麻烦。更关键的是——**你开车过去，车本身就是脏的，洗完还得再开回来，那50米的路上可能又沾上灰尘，等于白洗**。\n\n所以正确答案是：**走过去，让洗车店的人把车开进去洗**（如果你把钥匙给他们）。或者干脆自己走过去，然后步行回家，等洗好了再走过去取车。\n\n当然，如果你是想问“走路去洗车店，但车怎么过去”——那建议你开个玩笑说：“我走过去，车自己开过去。” 😄',165),('2026-05-09 01:36:19.878700','2026-05-09 01:36:21.000000','admin','admin','fd5fae57-7e53-416b-9d1e-7cafc5525f02','cf2fee88-58ea-41cd-a40c-72f09da1dbe1','user','有道测试AI智商的题，你敢不敢做？',15);
+/*!40000 ALTER TABLE `ai_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sys_dict_data`
 --
 
@@ -78,7 +141,7 @@ CREATE TABLE `sys_dict_type` (
 
 LOCK TABLES `sys_dict_type` WRITE;
 /*!40000 ALTER TABLE `sys_dict_type` DISABLE KEYS */;
-INSERT INTO `sys_dict_type` VALUES ('2026-04-26 01:43:16.497197','2026-04-26 01:43:16.497197','admin','admin','1cf7d66a-1119-428f-b1cd-16d103b9a932','用户性别','sys_user_gender','1','用户性别列表'),('2026-04-26 02:28:22.163277','2026-04-26 02:28:22.163277','admin','admin','2092c5ba-54ed-4d88-aadc-02bd8d65644f','菜单显隐','sys_menu_visible','1','菜单显隐列表'),('2026-04-20 04:34:50.882849','2026-04-20 17:17:19.000000','admin','admin','4e72f93b-9051-4c0b-bbb6-7fd833c2555b','系统状态','sys_common_status','1','系统状态列表'),('2026-04-26 02:03:42.902823','2026-04-26 02:03:42.902823','admin','admin','6821fa61-5032-4d68-85a6-ddce61716386','任务状态','sys_job_status','1','任务状态列表'),('2026-04-21 22:00:02.965176','2026-04-21 22:00:02.965176','admin','admin','8ab1bfca-3b61-4708-b7eb-202732db1ac1','系统开关','sys_normal_disable','1','系统开关列表'),('2026-04-26 02:04:54.226160','2026-04-26 02:04:54.226160','admin','admin','b8849a88-e972-42fc-9b87-75f0c8d18157','任务分组','sys_job_group','1','任务分组列表'),('2026-04-21 21:53:40.882517','2026-04-21 21:59:01.000000','admin','admin','da04de16-1667-47cf-916d-13716ed651a2','操作类型','sys_oper_type','1','操作类型列表');
+INSERT INTO `sys_dict_type` VALUES ('2026-04-26 01:43:16.497197','2026-05-08 12:50:12.000000','admin','admin','1cf7d66a-1119-428f-b1cd-16d103b9a932','用户性别','sys_user_gender','1','用户性别列表'),('2026-04-26 02:28:22.163277','2026-04-26 02:28:22.163277','admin','admin','2092c5ba-54ed-4d88-aadc-02bd8d65644f','菜单显隐','sys_menu_visible','1','菜单显隐列表'),('2026-04-20 04:34:50.882849','2026-04-20 17:17:19.000000','admin','admin','4e72f93b-9051-4c0b-bbb6-7fd833c2555b','系统状态','sys_common_status','1','系统状态列表'),('2026-04-26 02:03:42.902823','2026-04-26 02:03:42.902823','admin','admin','6821fa61-5032-4d68-85a6-ddce61716386','任务状态','sys_job_status','1','任务状态列表'),('2026-04-21 22:00:02.965176','2026-04-21 22:00:02.965176','admin','admin','8ab1bfca-3b61-4708-b7eb-202732db1ac1','系统开关','sys_normal_disable','1','系统开关列表'),('2026-04-26 02:04:54.226160','2026-04-26 02:04:54.226160','admin','admin','b8849a88-e972-42fc-9b87-75f0c8d18157','任务分组','sys_job_group','1','任务分组列表'),('2026-04-21 21:53:40.882517','2026-04-21 21:59:01.000000','admin','admin','da04de16-1667-47cf-916d-13716ed651a2','操作类型','sys_oper_type','1','操作类型列表');
 /*!40000 ALTER TABLE `sys_dict_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,6 +236,7 @@ CREATE TABLE `sys_login_log` (
 
 LOCK TABLES `sys_login_log` WRITE;
 /*!40000 ALTER TABLE `sys_login_log` DISABLE KEYS */;
+INSERT INTO `sys_login_log` VALUES ('055920ec-60d9-44ba-b0d8-40383fe4e2eb','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-07 12:44:48','01a000cf-c869-45d0-b504-49ba685ade4d'),('117b28c8-7b8a-447e-b69a-86cc8ecd7b28','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 23:46:49','98e99d8f-f0dd-41db-afac-145e80accc05'),('15d524b6-3fda-4282-8c74-c645e10f8595','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','0','验证码已过期，请刷新后重试','2026-05-08 14:08:36','73c584c2-7719-42ef-ad7d-6d8a079ac488'),('1dcd60b5-5f69-4f67-bde7-2a69679945a1','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 20:14:08','ebf9d77a-4398-489b-ac1c-4279a6ffc8d1'),('1fc3f9cf-ac46-4d71-b148-dbf72eebfec3','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 18:53:32','35db9e47-5195-419d-870e-e94acddc5a47'),('3e205679-f852-4790-9024-4a3f48068aa1','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 17:05:57','f40579a4-15bb-4776-b4cd-5183a5f53758'),('3f6c899a-12fa-447e-89d3-9e9e84cb8531','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-07 13:54:05','b8e3f361-60d8-4a3d-baff-aaa83064cfbe'),('430d7561-90e6-4444-9351-f06d6e27468e','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 12:10:35','cf5e6f38-b45f-4045-8f58-8dacc643b7ae'),('532eef4b-268f-4e44-8a41-baddfacfe9df','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','0','验证码已过期，请刷新后重试','2026-05-08 20:14:06','572d6067-584f-45eb-829f-2dacfeb839b3'),('6ab6e7d5-f2cf-496c-99e4-94b553ed0ea4','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-09 09:02:24','8d67509b-c1f3-4aa0-becc-e29f02271c3e'),('822af74d-a56d-4b99-8347-195db7fa647a','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 11:27:54','9613ad80-eb2d-4fbe-a589-fc3415187d12'),('a9fd5fab-44a3-47f0-8ed1-ac1ce9a652cd','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-09 07:35:53','7a3bf083-6242-4038-b006-3b03794816cb'),('ce36c685-9572-49a0-8643-876aa962e3a5','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','0','验证码错误，请刷新后重试','2026-05-08 12:10:32','1bc59e3c-cb7d-467d-8d4b-69e865c33d69'),('ddc2156c-7403-48b9-8e31-463375855cec','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 00:02:55','6abf4733-6e2b-43c1-af65-a477ff00677c'),('e95e1809-bde5-4d26-9252-eef108579410','admin','127.0.0.1','内网IP','Chrome134.0.0.0','Windows10','1','登录成功','2026-05-08 14:08:39','0f9530f8-814a-4e1f-829d-096b2a601af9');
 /*!40000 ALTER TABLE `sys_login_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -247,7 +311,7 @@ CREATE TABLE `sys_oper_log` (
 
 LOCK TABLES `sys_oper_log` WRITE;
 /*!40000 ALTER TABLE `sys_oper_log` DISABLE KEYS */;
-INSERT INTO `sys_oper_log` VALUES ('b4651a1e-9d90-45f2-b788-a195dfc9401f','操作日志','admin','LogController.deleteOperinfo','DELETE','{\n  \"query\": {\n    \"ids\": \"a1fb0c98-f2ba-4323-95e7-79c973470e65\"\n  }\n}','/api/monitor/log/operlog/delete','127.0.0.1','内网IP','3','1','2026-05-07 10:48:34',16,'1906efeb-d544-4d24-81a0-75c246f32a7c');
+INSERT INTO `sys_oper_log` VALUES ('1f3b54ef-5a09-4dfd-8e62-ab36eab93a63','字典管理','admin','DictController.updateType','PUT','{\n  \"query\": {},\n  \"body\": {\n    \"createTime\": \"2026-04-26 01:43:16\",\n    \"updateTime\": \"2026-04-26 01:43:16\",\n    \"createBy\": \"admin\",\n    \"updateBy\": \"admin\",\n    \"id\": \"1cf7d66a-1119-428f-b1cd-16d103b9a932\",\n    \"dictName\": \"用户性别1\",\n    \"dictType\": \"sys_user_gender\",\n    \"status\": \"1\",\n    \"remark\": \"用户性别列表\"\n  }\n}','/api/system/dict/type/update','127.0.0.1','内网IP','2','1','2026-05-08 20:49:59',14,'ecc72bc2-3a02-4b33-86c7-b84b7610e04e'),('4b7f57b5-5d6c-42c0-bcfa-44f5c41ab973','字典管理','admin','DictController.updateType','PUT','{\n  \"query\": {},\n  \"body\": {\n    \"createTime\": \"2026-04-26 01:43:16\",\n    \"updateTime\": \"2026-05-08 12:49:59\",\n    \"createBy\": \"admin\",\n    \"updateBy\": \"admin\",\n    \"id\": \"1cf7d66a-1119-428f-b1cd-16d103b9a932\",\n    \"dictName\": \"用户性别\",\n    \"dictType\": \"sys_user_gender\",\n    \"status\": \"1\",\n    \"remark\": \"用户性别列表\"\n  }\n}','/api/system/dict/type/update','127.0.0.1','内网IP','2','1','2026-05-08 20:50:12',22,'2e1ee6e7-b1b1-48c5-aed2-66bb5a60efe9'),('b4651a1e-9d90-45f2-b788-a195dfc9401f','操作日志','admin','LogController.deleteOperinfo','DELETE','{\n  \"query\": {\n    \"ids\": \"a1fb0c98-f2ba-4323-95e7-79c973470e65\"\n  }\n}','/api/monitor/log/operlog/delete','127.0.0.1','内网IP','3','1','2026-05-07 10:48:34',16,'1906efeb-d544-4d24-81a0-75c246f32a7c'),('d8fce8c8-b596-418f-b4f9-da8050cbad31','缓存列表','admin','CacheController.clearCacheName','DELETE','{\n  \"query\": {\n    \"name\": \"throttle:limit\"\n  }\n}','/api/monitor/cache/names/delete','127.0.0.1','内网IP','4','1','2026-05-09 01:07:35',4,'ceb280f2-a252-40a3-9fef-0bb884acb974');
 /*!40000 ALTER TABLE `sys_oper_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,7 +410,7 @@ CREATE TABLE `sys_user` (
 
 LOCK TABLES `sys_user` WRITE;
 /*!40000 ALTER TABLE `sys_user` DISABLE KEYS */;
-INSERT INTO `sys_user` VALUES ('2026-04-19 02:39:01.392827','2026-05-07 02:39:25.000000','admin','admin','866b0232-507b-42a4-bdc1-47fc4a83616a','admin','$argon2id$v=19$m=65536,t=3,p=4$inTpzf3epiqXwcjgXNNYww$dvIFM+MCgd1oFE5z2XS14KgNct4KrMrtgla+BwOtfwo','18888888888','188@163.com','1',NULL,'2026-05-07 10:39:25','祂','2','系统管理员'),('2026-04-20 03:44:22.291192','2026-04-22 14:09:19.000000','admin','admin','f93176b9-6cc6-4e5a-addc-53257113c383','test','$argon2id$v=19$m=65536,t=3,p=4$7pkc53QbbZg+JCpl+vryVQ$ah5MxOYhytw9jcaQHmGhWZ5TT8KXB+EJLlHDxxAD+ak','19999999999','19999999999@126.com','1',18,NULL,'测试','1','测试角色');
+INSERT INTO `sys_user` VALUES ('2026-04-19 02:39:01.000000','2026-05-09 01:02:24.000000','admin','admin','866b0232-507b-42a4-bdc1-47fc4a83616a','admin','$argon2id$v=19$m=65536,t=3,p=4$inTpzf3epiqXwcjgXNNYww$dvIFM+MCgd1oFE5z2XS14KgNct4KrMrtgla+BwOtfwo','18888888888','188@163.com','1',NULL,'2026-05-09 09:02:24','祂','2','系统管理员'),('2026-04-20 03:44:22.000000','2026-04-22 14:09:19.000000','admin','admin','f93176b9-6cc6-4e5a-addc-53257113c383','test','$argon2id$v=19$m=65536,t=3,p=4$7pkc53QbbZg+JCpl+vryVQ$ah5MxOYhytw9jcaQHmGhWZ5TT8KXB+EJLlHDxxAD+ak','19999999999','19999999999@126.com','1',18,NULL,'测试','1','测试角色');
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -387,4 +451,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07  2:48:56
+-- Dump completed on 2026-05-09  1:54:55

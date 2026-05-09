@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Column } from 'typeorm'
 
 export abstract class CommonEntity {
   /**
@@ -8,16 +8,16 @@ export abstract class CommonEntity {
    * @type {Date | string} 数据库存储为 timestamp，加载后可转为格式化字符串
    * @example "2025-01-01 12:00:00" / Date 对象
    */
-  @CreateDateColumn({ name: 'create_time', comment: '创建时间', update: false, type: 'timestamp' })
+  @Column({ name: 'create_time', comment: '创建时间', update: false, type: 'datetime', precision: 0, default: () => 'CURRENT_TIMESTAMP' })
   createTime: Date
 
   /**
    * 更新时间
    * @description 自动生成，实体每次保存（save）时更新
-   * @type {Date | string} 数据库存储为 timestamp，加载后可转为格式化字符串
+   * @type {Date | string} 数据库存储为 datetime，加载后可转为格式化字符串
    * @example "2025-01-02 14:30:00" / Date 对象
    */
-  @UpdateDateColumn({ name: 'update_time', comment: '更新时间', type: 'timestamp' })
+  @Column({ name: 'update_time', comment: '更新时间', type: 'datetime', precision: 0, default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updateTime: Date
 
   /**
