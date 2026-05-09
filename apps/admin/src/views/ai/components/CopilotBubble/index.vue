@@ -10,7 +10,7 @@
       <!-- 消息内容 -->
       <div class="bubble-content">
         <!-- 正在请求的最后一条AI消息：显示loading -->
-        <template v-if="isAssistant && currentMessage.loading && currentMessage.content === ''">
+        <template v-if="isAssistant && currentMessage.content === ''">
           <span class="c-[--el-color-info]">思考中...</span>
         </template>
 
@@ -40,19 +40,24 @@ import 'markstream-vue/index.css' // https://markstream-vue-docs.simonhe.me/zh
 import 'katex/dist/katex.min.css'
 import CodeBlockNode from './CodeBlockNode.vue'
 import { copyText } from '@/utils'
-import type { CopilotMessage } from '@/types'
+import type { Message } from '@/types'
 import MarkdownRender, { setCustomComponents } from 'markstream-vue'
 
 const userStore = useUserStore()
 
-const props = defineProps<{
-  index: number
-  messages: CopilotMessage[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    index: number
+    messages: Message[]
+  }>(),
+  {},
+)
 
 const emits = defineEmits<{
   regenerate: []
 }>()
+
+const aiStore = useAiStore()
 
 /** 自定义组件注册 | 覆盖 markstream-vue 的默认组件 */
 setCustomComponents('doc', { code_block: CodeBlockNode })
@@ -67,13 +72,14 @@ const classes = computed(() => ['copilot-bubble', `copilot-bubble--${currentMess
 const isAssistant = computed(() => currentMessage.value.role === 'assistant')
 
 /** 是否为用户消息 */
-const isHuman = computed(() => currentMessage.value.role === 'human')
+const isHuman = computed(() => ['human', 'user'].includes(currentMessage.value.role))
 
 /** 消息头像 */
-const messageAvatar = computed(() => (isHuman.value ? userStore.avatar : 'https://picsum.photos/200/200'))
+// const messageAvatar = computed(() => (isHuman.value ? userStore.avatar : 'https://picsum.photos/200/200'))
+const messageAvatar = computed(() => (isHuman.value ? userStore.avatar : '/img/logo.png'))
 
 /** 是否显示操作栏 */
-const showActions = computed(() => !currentMessage.value.loading && currentMessage.value.content && isAssistant.value)
+const showActions = computed(() => !aiStore.loading && currentMessage.value.content && isAssistant.value)
 
 /** 是否为最后一条 AI 消息 */
 const isLastAssistant = computed(() => {
@@ -138,7 +144,8 @@ const isLastAssistant = computed(() => {
   }
 }
 
-.copilot-bubble--human {
+.copilot-bubble--human,
+.copilot-bubble--user {
   --copilot-bubble-content-bg-color: var(--el-color-success-light-5);
   flex-direction: row-reverse;
 }
@@ -161,7 +168,8 @@ const isLastAssistant = computed(() => {
   left: calc(-1 * var(--copilot-bubble-triangle-size));
   border-right: var(--copilot-bubble-triangle-size) solid var(--copilot-bubble-content-bg-color);
 }
-.copilot-bubble--human .bubble-content::after {
+.copilot-bubble--human .bubble-content::after,
+.copilot-bubble--user .bubble-content::after {
   right: calc(-1 * var(--copilot-bubble-triangle-size));
   border-left: var(--copilot-bubble-triangle-size) solid var(--copilot-bubble-content-bg-color);
 }

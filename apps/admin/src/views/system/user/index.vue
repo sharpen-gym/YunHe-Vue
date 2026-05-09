@@ -35,9 +35,10 @@
 
 <script setup lang="ts">
 import { TipModal } from '@/utils'
+import type { ProTableColumn } from '@/types'
 import UserDialog from './components/UserDialog.vue'
 import { UserRequest } from '@/api/system/user.request'
-import type { ProSearchItem, UserEntity, UserQueryParams, ProTableColumn } from '@/types'
+import type { ProSearchItem, UserEntity, UserQueryParams } from '@/types'
 
 const { sys_normal_disable, sys_user_gender } = useDict('sys_normal_disable', 'sys_user_gender')
 const list = ref<UserEntity[]>([])

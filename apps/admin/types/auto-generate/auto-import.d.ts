@@ -125,6 +125,7 @@ declare global {
   const unrefElement: typeof import('@vueuse/core').unrefElement
   const until: typeof import('@vueuse/core').until
   const useActiveElement: typeof import('@vueuse/core').useActiveElement
+  const useAiStore: typeof import('../../src/store/modules/ai').useAiStore
   const useAnimate: typeof import('@vueuse/core').useAnimate
   const useAppStore: typeof import('../../src/store/modules/app').useAppStore
   const useArrayDifference: typeof import('@vueuse/core').useArrayDifference

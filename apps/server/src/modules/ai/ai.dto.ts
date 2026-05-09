@@ -17,9 +17,25 @@ export class ChatDto {
   @IsBoolean({ message: 'enableInternetSearch 必须是布尔值' })
   enableInternetSearch: boolean
 
-  @IsArray({ message: '参数 $property 不可为空' })
-  @ValidateNested({ each: true })
-  @Type(() => Message)
+  @IsOptional()
+  conversationId: string
+
   @IsNotEmpty({ message: '参数 $property 不可为空' })
-  messages: Message[]
+  message: string
+}
+
+export class CreateConversationDto {
+  @IsNotEmpty({ message: '会话标题不能为空' })
+  @IsString()
+  title: string
+}
+
+export class UpdateConversationTitleDto {
+  @IsNotEmpty({ message: '会话标题不能为空' })
+  @IsString()
+  title: string
+
+  @IsNotEmpty({ message: '会话ID不能为空' })
+  @IsString()
+  conversationId: string
 }

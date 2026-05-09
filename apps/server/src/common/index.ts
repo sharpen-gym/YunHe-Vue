@@ -19,6 +19,8 @@ export { RequirePermissions } from './decorator/require-permissions.decorator'
 
 export { PaginationDto } from './dto/pagination.dto'
 
+export { AiMessageEntity } from './entities/ai/message.entity'
+export { AiConversationEntity } from './entities/ai/conversation.entity'
 export { UserEntity } from './entities/system/user.entity'
 export { RoleEntity } from './entities/system/role.entity'
 export { MenuEntity } from './entities/system/menu.entity'

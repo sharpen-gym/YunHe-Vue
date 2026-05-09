@@ -73,7 +73,7 @@ const columns: ProTableColumn<MenuEntity>[] = [
   { align: 'left', label: '菜单名称', slot: 'menuName', width: 185 },
   { align: 'center', label: '菜单类型', slot: 'menuType' },
   { align: 'center', label: '显示顺序', prop: 'menuSort', width: 90 },
-  { align: 'center', label: '权限标识', prop: 'permission', width: 200 },
+  { align: 'center', label: '权限标识', prop: 'permission', width: 220, showOverflowTooltip: true },
   { align: 'center', label: '路由地址', prop: 'path', width: 180, showOverflowTooltip: true },
   { align: 'center', label: '页面地址', prop: 'component', width: 220, showOverflowTooltip: true },
   { align: 'center', label: '菜单状态', slot: 'status' },

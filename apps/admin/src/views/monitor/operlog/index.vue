@@ -42,7 +42,8 @@
 <script setup lang="ts">
 import OperateDetailDialog from './detail.vue'
 import { linkDownload, TipModal } from '@/utils'
-import type { OperLogEntity, OperlogQueryParams, ProTableColumn, ProSearchItem } from '@/types'
+import type { ProSearchItem, ProTableColumn } from '@/types'
+import type { OperLogEntity, OperlogQueryParams } from '@/types'
 import { OperateinfoRequest } from '@/api/monitor/operlog.request'
 
 const { sys_oper_type, sys_common_status } = useDict('sys_oper_type', 'sys_common_status')

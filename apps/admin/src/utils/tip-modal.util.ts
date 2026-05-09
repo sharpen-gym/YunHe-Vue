@@ -76,8 +76,13 @@ export abstract class TipModal {
   }
 
   /** 提交内容 */
-  static prompt(content: string, config: ElMessageBoxOptions = {}) {
-    return ElMessageBox.prompt(content, '系统提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning', ...config })
+  static async prompt(content: string, config: ElMessageBoxOptions = {}) {
+    try {
+      const { value } = await ElMessageBox.prompt(content, '系统提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning', ...config })
+      return { confirm: true, cancel: false, value }
+    } catch (error: unknown) {
+      return { cancel: true, confirm: false, value: '' }
+    }
   }
 
   /** 打开遮罩层 */
