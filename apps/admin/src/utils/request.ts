@@ -82,8 +82,13 @@ instance.interceptors.response.use(
   },
   (error: any) => {
     NProgress.done()
-    console.log(error)
     let { message } = error
+
+    // 处理取消请求
+    if (axios.isCancel(error) || error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError') {
+      return Promise.reject(error)
+    }
+
     if (message == 'Network Error') {
       message = '后端接口连接异常'
     }

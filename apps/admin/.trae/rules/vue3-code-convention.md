@@ -15,6 +15,7 @@ AI 生成的 Vue3 代码必须遵循以下规则：
 - 色彩优先使用 Element Plus CSS 变量，方便深色主题自动适配
 - 优先使用 BEM 风格写，而非原子化样式类
 - 布局需要适配桌面端和移动端，html[data-device='mobile'] 代表处于移动端环境
+- 路由页面统一挂载 class="app-content"，保持基础样式一致性
 
 ## JavaScript
 

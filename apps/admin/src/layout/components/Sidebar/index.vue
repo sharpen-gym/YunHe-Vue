@@ -1,5 +1,5 @@
 <template>
-  <aside>
+  <aside class="flex flex-col">
     <AppLogo v-if="settingStore.showLogo" />
 
     <el-scrollbar wrap-class="scrollbar-wrapper">
@@ -39,6 +39,12 @@ const uniqueOpened = computed(() => settingStore.uniqueOpened)
   --el-menu-sub-item-height: var(--el-sidebar-item-height);
   user-select: none;
   border: none;
+  overflow: hidden;
+  // background-color: red !important;
+}
+
+.scrollbar-wrapper {
+  background-color: purple !important;
 }
 
 /* 折叠状态下多级菜单有子菜单激活时顶级主菜单的样式 */

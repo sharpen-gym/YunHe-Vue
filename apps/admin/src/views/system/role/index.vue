@@ -40,7 +40,7 @@ import { TipModal } from '@/utils'
 import RoleDialog from './components/RoleDialog.vue'
 import { RoleRequest } from '@/api/system/role.request'
 import AuthPermission from './components/AuthPermission.vue'
-import type { RoleEntity, RoleQueryParams, ProTableColumn, ProSearchItem } from '@/types'
+import type { RoleEntity, RoleQueryParams, ProSearchItem, ProTableColumn } from '@/types'
 
 const { sys_normal_disable } = useDict('sys_normal_disable')
 

@@ -1,4 +1,4 @@
-import { createMd5Hash } from '@/utils'
+import { createSha256 } from '@/utils'
 import { Injectable } from '@nestjs/common'
 import { extname, resolve } from 'node:path'
 import { BusinessException } from '@/common'
@@ -18,8 +18,8 @@ export class UploadService {
     if (file.size > 10 * 1024 * 1024) throw new BusinessException('文件大于10MB，请使用分片上传')
     // 处理中文乱码并获取后缀
     const ext = extname(Buffer.from(file.originalname, 'latin1').toString('utf8'))
-    // 根据文件内容生成唯一 MD5 文件名
-    const filename = `${createMd5Hash(file.buffer)}${ext}`
+    /** 根据文件内容生成唯一 SHA-256 文件名 */
+    const filename = `${createSha256(file.buffer)}${ext}`
     // 生成文件保存路径
     const filePath = resolve(this.UPLOAD_DIR_PATH, filename)
     // 文件已存在则直接返回路径（秒传）

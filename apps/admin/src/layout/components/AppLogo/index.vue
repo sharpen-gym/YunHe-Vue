@@ -33,6 +33,7 @@ const isShowTitle = computed(() => !appStore.isCollapse)
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   height: var(--el-navbar-height);
   margin: 0;
   padding: 0;

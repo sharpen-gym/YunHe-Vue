@@ -1,4 +1,5 @@
 import { request } from '@/utils/request'
+import type { AxiosRequestConfig } from 'axios'
 import type { CheckFileParams, CheckFileResponse, ClearChunkParams, MergeChunkParams } from '@/types'
 
 export abstract class uploadRequest {
@@ -13,8 +14,8 @@ export abstract class uploadRequest {
   }
 
   /** 上传单个分片 */
-  static uploadChunk(data: FormData): Promise<string> {
-    return request.post('/common/upload/chunk', data)
+  static uploadChunk(data: FormData, config: AxiosRequestConfig = {}): Promise<string> {
+    return request.post('/common/upload/chunk', data, config)
   }
 
   /** 合并所有分片 */
@@ -23,7 +24,7 @@ export abstract class uploadRequest {
   }
 
   /** 清理分片 */
-  static clearChunk(data: ClearChunkParams): Promise<string> {
-    return request.post('/common/upload/chunk/clear', data)
+  static clearChunk(params: ClearChunkParams): Promise<string> {
+    return request.delete('/common/upload/chunk/clear', { params })
   }
 }

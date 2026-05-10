@@ -281,7 +281,6 @@ function handleSelect(index: number) {
 
     &:hover {
       background: var(--el-color-primary-light-3);
-      color: var(--el-color-primary);
     }
 
     &:active {
