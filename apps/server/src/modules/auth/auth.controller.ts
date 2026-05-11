@@ -1,6 +1,6 @@
 import { LoginDto } from './auth.dto'
 import { AuthService } from './auth.service'
-import { CommonConstant, CurrentUser, Public } from '@/common'
+import { CommonConstant, CurrentUser, Public, RepeatSubmit } from '@/common'
 import { Body, Controller, Get, Post, Req, Headers } from '@nestjs/common'
 
 @Controller()
@@ -16,6 +16,7 @@ export class AuthController {
 
   /** 用户登录 */
   @Public()
+  @RepeatSubmit()
   @Post('login')
   public login(@Body() loginDto: LoginDto, @Req() request: ExpressRequest) {
     return this.authService.login(loginDto, request)

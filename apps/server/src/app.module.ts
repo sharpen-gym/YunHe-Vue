@@ -10,9 +10,9 @@ import { BeforeEachMiddleware } from '@/common'
 import { TokenModule, DatabaseModule } from '@/common'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common'
-import { JwtAuthGuard, ThrottlerLimitGuard, DemoEnvironmentGuard, PermissionAuthGuard } from '@/common'
+import { JwtAuthGuard, ThrottlerLimitGuard, DemoEnvironmentGuard, PermissionAuthGuard, RepeatSubmitGuard, RoleAuthGuard } from '@/common'
 import { ReponseTransformInterceptor, ResponseCacheInterceptor, OperationLogInterceptor } from '@/common'
-import { AiModule } from './modules/ai/ai.module';
+import { AiModule } from './modules/ai/ai.module'
 
 @Module({
   imports: [
@@ -23,7 +23,8 @@ import { AiModule } from './modules/ai/ai.module';
     SharedModule, // 共享模块
     AuthModule, // 认证模块
     SystemModule, // 系统管理模块
-    MonitorModule, AiModule, // 系统监控模块
+    MonitorModule,
+    AiModule, // 系统监控模块
   ],
 
   providers: [
@@ -31,8 +32,12 @@ import { AiModule } from './modules/ai/ai.module';
     { provide: APP_GUARD, useClass: ThrottlerLimitGuard },
     // 资源访问 Token 凭证权限校验守卫
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // 角色守卫 | 检查用户是否有指定角色访问当前接口
+    { provide: APP_GUARD, useClass: RoleAuthGuard },
     // 接口访问权限守卫 | 检查用户是否有权限访问当前接口
     { provide: APP_GUARD, useClass: PermissionAuthGuard },
+    // 防止重复提交守卫
+    { provide: APP_GUARD, useClass: RepeatSubmitGuard },
     // 演示环境操作守卫
     { provide: APP_GUARD, useClass: DemoEnvironmentGuard },
     // 配置全局验证管道，用于验证请求参数和响应数据

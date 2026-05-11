@@ -10,30 +10,34 @@ const pendingMap = new Set<string>()
  * - 支持对象排序 / FormData / File / 循环引用
  */
 function stableStringify(value: any, seen = new WeakSet()): string {
-  // null / undefined
-  if (value == null) return ''
-  // Date
-  if (value instanceof Date) return value.toISOString()
-  // FormData
+  // 1. 处理 null 和 undefined（保证输出合法 JSON）
+  if (value === null || value === undefined) return 'null'
+  // 2. 处理 BigInt（因为原生 JSON.stringify 不支持）
+  if (typeof value === 'bigint') return JSON.stringify(value.toString())
+  // 3. 处理 Date，加上 JSON.stringify 以获得双引号字符串
+  if (value instanceof Date) return JSON.stringify(value.toISOString())
+  // 4. 处理 FormData
   if (value instanceof FormData) {
     const obj: Record<string, any> = {}
     value.forEach((v, k) => {
       const currentValue = v instanceof File ? { name: v.name, size: v.size, type: v.type, lastModified: v.lastModified } : v
-      // 支持同 key
       obj[k] = k in obj ? (Array.isArray(obj[k]) ? [...obj[k], currentValue] : [obj[k], currentValue]) : currentValue
     })
     return stableStringify(obj, seen)
   }
-  // 基础类型
-  if (typeof value !== 'object') return JSON.stringify(value)
-  // 循环引用
+  // 5. 基础类型（除了 object 和 bigint）
+  if (typeof value === 'function' || typeof value === 'symbol') return 'null'
+  // 6. 循环引用检测
   if (seen.has(value)) return '"[Circular]"'
   seen.add(value)
-  // Array
+  // 7. 数组
   if (Array.isArray(value)) return `[${value.map((item) => stableStringify(item, seen)).join(',')}]`
-  // 普通对象排序
+  // 8. 普通对象（按键排序）
   const keys = Object.keys(value).sort()
-  return `{${keys.map((key) => `"${key}":${stableStringify(value[key], seen)}`).join(',')}}`
+  return `{${keys
+    .filter((key) => value[key] !== undefined)
+    .map((key) => `"${key}":${stableStringify(value[key], seen)}`)
+    .join(',')}}`
 }
 
 /** 生成请求唯一 key */

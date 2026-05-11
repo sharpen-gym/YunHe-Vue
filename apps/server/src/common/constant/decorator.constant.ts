@@ -34,6 +34,12 @@ export const DecoratorConstant = {
   PERMISSIONS: 'common:auth:permissions',
 
   /**
+   * 重复提交装饰器标识
+   * 用于标记需要进行重复提交校验的接口，值为 'common:request:repeatSubmit'
+   */
+  REPEAT_SUBMIT: 'common:request:repeatSubmit',
+
+  /**
    * 跳过响应转换装饰器标识
    * 用于标记不需要进行响应转换的接口，值为 'common:response:skip'
    */
