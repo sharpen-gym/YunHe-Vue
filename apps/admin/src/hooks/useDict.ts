@@ -35,8 +35,6 @@ export function useDict<T extends string[]>(...dictTypes: T) {
       // 同时更新缓存和当前组件的 dictData
       dictData[dictType] = formattedList
       dictCache[dictType] = formattedList
-      console.log('dictData: ', dictData)
-      console.log('dictCache: ', dictCache)
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : '未知错误'
       console.error(`加载字典数据失败：${dictType}`, errorMsg)

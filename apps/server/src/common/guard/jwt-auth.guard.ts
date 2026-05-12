@@ -2,12 +2,13 @@ import { Reflector } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { RedisService } from '@/shared/redis.service'
-import { BusinessException } from '../exception/business.exception'
-import { RedisConstant, CommonConstant, DecoratorConstant } from '@/common'
-import { Injectable, CanActivate, ExecutionContext, HttpStatus } from '@nestjs/common'
+import { RedisConstant, CommonConstant, DecoratorConstant, BusinessException } from '@/common'
+import { Injectable, CanActivate, ExecutionContext, HttpStatus, Logger } from '@nestjs/common'
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly logger = new Logger(JwtAuthGuard.name)
+
   constructor(
     private readonly reflector: Reflector,
     private readonly jwtService: JwtService,
@@ -17,8 +18,6 @@ export class JwtAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<ExpressRequest>()
-
-    // if (request.headers['user-agent']?.includes('ApipostRuntime')) throw new Error('禁止使用 Apipost 客户端来访问')
 
     // 放行公开接口
     const isPublic = this.reflector.getAllAndOverride<boolean>(DecoratorConstant.PUBLIC, [context.getHandler(), context.getClass()]) ?? false
@@ -38,13 +37,16 @@ export class JwtAuthGuard implements CanActivate {
       const redisToken = await this.redisService.get(REDIS_TOKEN_KEY)
       if (!redisToken || redisToken !== accessToken) throw new Error('invalid token')
 
-      // 自动续期用户在线状态、角色、权限缓存
-      await Promise.all([
-        this.redisService.expire(REDIS_TOKEN_KEY, this.expiresIn),
+      // 自动续期缓存（best-effort，不阻塞请求，失败仅打日志不影响认证结果）
+      Promise.all([
+        this.redisService.expire(`${RedisConstant.ACCESS_TOKEN_KEY}:${userId}:${uuid}`, this.expiresIn),
         this.redisService.expire(`${RedisConstant.ADMIN_USER_ONLINE_KEY}:${userId}:${uuid}`, this.expiresIn),
         this.redisService.expire(`${RedisConstant.ADMIN_USER_ROLES}:${userId}`, this.expiresIn),
         this.redisService.expire(`${RedisConstant.ADMIN_USER_PERMISSIONS}:${userId}`, this.expiresIn),
-      ])
+      ]).catch((error: unknown) => {
+        const errMsg = error instanceof Error ? error.message : '未知错误'
+        this.logger.warn(`Token 续期失败（不影响本次请求）: ${errMsg}`)
+      })
 
       // 将用户信息挂载到请求对象，供后续接口使用
       request[CommonConstant.JWT_PAYLOAD] = payload

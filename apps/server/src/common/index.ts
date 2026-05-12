@@ -32,6 +32,7 @@ export { JobEntity } from './entities/monitor/job.entity'
 export { JobLogEntity } from './entities/monitor/job-log.entity'
 export { OperLogEntity } from './entities/monitor/operlog.entity'
 export { LogininforEntity } from './entities/monitor/logininfor.entity'
+export { PromptEntity } from './entities/resource/prompt.entity'
 
 export { BusinessException } from './exception/business.exception'
 

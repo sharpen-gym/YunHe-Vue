@@ -82,7 +82,6 @@ export function repeatSubmitInterceptor(instance: AxiosInstance) {
       // 请求异常后移除
       if (config?.url) {
         const key = getPendingKey(config)
-        console.log(111, pendingMap.has(key))
         pendingMap.delete(key)
       }
 

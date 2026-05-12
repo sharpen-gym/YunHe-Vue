@@ -7,6 +7,11 @@ export abstract class OnlineRequest {
     return request.get(`/monitor/online/list`, { params })
   }
 
+  /** 查询在线用户数量 */
+  static findCount(): Promise<number> {
+    return request.get(`/monitor/online/count`)
+  }
+
   /** 强退用户 */
   static forceLogout(params: { userId: string; uuid: string }): Promise<string> {
     return request.delete(`/monitor/online/forceLogout`, { params })
