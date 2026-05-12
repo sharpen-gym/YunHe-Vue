@@ -56,7 +56,7 @@ const columns: ProTableColumn<LogininfoEntity>[] = [
   { align: 'center', type: 'index', label: '序号', width: 64 },
   { align: 'center', prop: 'requestId', label: '访问编号', showOverflowTooltip: true },
   { align: 'center', prop: 'username', label: '用户名称', showOverflowTooltip: true },
-  { align: 'center', prop: 'ip', label: '地址', showOverflowTooltip: true, minWidth: 140 },
+  { align: 'center', prop: 'ip', label: '地址', showOverflowTooltip: true, width: 150 },
   { align: 'center', prop: 'location', label: '登录地点', showOverflowTooltip: true, minWidth: 150 },
   { align: 'center', prop: 'os', label: '操作系统', showOverflowTooltip: true, minWidth: 150 },
   { align: 'center', prop: 'browser', label: '浏览器', showOverflowTooltip: true, width: 180 },

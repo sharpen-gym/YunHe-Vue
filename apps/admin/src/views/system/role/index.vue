@@ -62,11 +62,11 @@ const items: ProSearchItem[] = [
 const columns: ProTableColumn<RoleEntity>[] = [
   { align: 'center', type: 'selection' },
   { align: 'center', type: 'index', label: '序号', width: 64 },
-  { align: 'center', prop: 'roleCode', label: '角色编码', showOverflowTooltip: true },
-  { align: 'center', prop: 'roleName', label: '角色名称', showOverflowTooltip: true },
+  { align: 'center', prop: 'roleCode', label: '角色编码', showOverflowTooltip: true, minWidth: 100 },
+  { align: 'center', prop: 'roleName', label: '角色名称', showOverflowTooltip: true, minWidth: 120 },
   // { align: 'center', prop: 'roleSort', label: '排序', width: 80 },
   { align: 'center', prop: 'status', label: '状态', slot: 'status', width: 80 },
-  { align: 'center', prop: 'remark', label: '备注', showOverflowTooltip: true },
+  { align: 'center', prop: 'remark', label: '备注', showOverflowTooltip: true, minWidth: 120 },
   { align: 'center', prop: 'createTime', label: '创建时间', width: 170 },
   { align: 'center', slot: 'action', label: '操作', fixed: 'right', width: 132 },
 ]
