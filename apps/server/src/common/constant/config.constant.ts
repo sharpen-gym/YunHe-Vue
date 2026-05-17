@@ -29,6 +29,12 @@ export const ConfigConstant = {
   SERVER_IS_DEMO: 'server.isDemo',
 
   /**
+   * 是否允许多设备登录
+   * 是否允许用户在多个设备上同时登录，默认值为 true
+   */
+  SERVER_ALLOW_MULTI_DEVICE: 'server.allowMultiDevice',
+
+  /**
    * 数据库配置
    * 配置文件中数据库相关配置的命名空间，包含主机、端口、用户名、密码、数据库名等
    */

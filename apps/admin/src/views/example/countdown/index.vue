@@ -58,7 +58,7 @@
           </template>
           <el-row :gutter="12">
             <el-col :xs="12" :sm="6">
-              <el-statistic :value="animatedValues.cards.activeUsers" :value-style="{ color: '#409EFF', fontSize: '28px', fontWeight: 600 }">
+              <el-statistic :value="animatedValues.cards.activeUsers" :value-style="{ color: 'var(--el-color-primary)', fontSize: '28px', fontWeight: 600 }">
                 <template #title>
                   <div class="countup-page__card-stat-title">
                     <SvgIcon name="Online" class="countup-page__inline-icon" />
@@ -68,7 +68,7 @@
               </el-statistic>
             </el-col>
             <el-col :xs="12" :sm="6">
-              <el-statistic :value="animatedValues.cards.tasks" :value-style="{ color: '#67C23A', fontSize: '28px', fontWeight: 600 }" suffix="个">
+              <el-statistic :value="animatedValues.cards.tasks" :value-style="{ color: 'var(--el-color-success)', fontSize: '28px', fontWeight: 600 }" suffix="个">
                 <template #title>
                   <div class="countup-page__card-stat-title">
                     <SvgIcon name="Schedule" class="countup-page__inline-icon" />
@@ -78,7 +78,7 @@
               </el-statistic>
             </el-col>
             <el-col :xs="12" :sm="6">
-              <el-statistic :value="animatedValues.cards.diskUsage" :value-style="{ color: '#E6A23C', fontSize: '28px', fontWeight: 600 }" suffix="%">
+              <el-statistic :value="animatedValues.cards.diskUsage" :value-style="{ color: 'var(--el-color-warning)', fontSize: '28px', fontWeight: 600 }" suffix="%">
                 <template #title>
                   <div class="countup-page__card-stat-title">
                     <SvgIcon name="Disk" class="countup-page__inline-icon" />
@@ -88,7 +88,7 @@
               </el-statistic>
             </el-col>
             <el-col :xs="12" :sm="6">
-              <el-statistic :value="animatedValues.cards.errorRate" :precision="2" :value-style="{ color: '#F56C6C', fontSize: '28px', fontWeight: 600 }" suffix="%">
+              <el-statistic :value="animatedValues.cards.errorRate" :precision="2" :value-style="{ color: 'var(--el-color-danger)', fontSize: '28px', fontWeight: 600 }" suffix="%">
                 <template #title>
                   <div class="countup-page__card-stat-title">
                     <SvgIcon name="Monitor" class="countup-page__inline-icon" />

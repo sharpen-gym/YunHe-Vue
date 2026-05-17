@@ -103,7 +103,7 @@ async function handleLogin() {
     await userStore.login(loginForm.value)
     loading.value = false
     await router.replace(redirect)
-    TipModal.msgSuccess(`${getTimeGreeting()}，欢迎回来`)
+    TipModal.notifySuccess(`${getTimeGreeting()}，欢迎回来`, { title: '登录成功' })
   } catch (error: any) {
     console.log('handleLogin error: ', error)
     loginForm.value.captcha = ''

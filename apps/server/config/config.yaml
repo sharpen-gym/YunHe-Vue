@@ -2,6 +2,7 @@
 server:
   port: 3000 # 服务器监听端口（客户端请求需访问此端口）
   globalPrefix: 'api' # 全局路由前缀（所有接口路径会自动添加此前缀，如访问接口实际路径为 /api/xxx）
+  allowMultiDevice: true # 是否允许多设备登录（true 时每个用户可同时登录多个设备，false 时每个用户只能在一台设备上登录）
   isDemo: false # 是否演示环境
 
 # 数据库相关配置

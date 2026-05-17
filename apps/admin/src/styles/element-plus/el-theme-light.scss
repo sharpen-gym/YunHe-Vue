@@ -1,13 +1,17 @@
 /* more：https://github.com/element-plus/element-plus/blob/dev/packages/theme-chalk/src/common/var.scss */
+// https://zhongguose.com/#zhulv
+
+$--color-primary: #0077ff;
+$--color-success: #1ba784; // 竹绿色
 
 // primary.base 保持与 apps\admin\src\settings.ts 中的 primaryColor 一致
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
-      'base': #0077ff,
+      'base': $--color-primary,
     ),
     'success': (
-      'base': #03c988,
+      'base': $--color-success,
     ),
     'warning': (
       'base': #ff983f,
