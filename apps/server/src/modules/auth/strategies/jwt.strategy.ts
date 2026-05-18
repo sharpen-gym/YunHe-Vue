@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
 import { ConfigService } from '@nestjs/config'
-import { Injectable, Logger } from '@nestjs/common'
+import { HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { RedisService } from '@/shared/redis.service'
 import { BusinessException, ConfigConstant, RedisConstant } from '@/common'
 
@@ -26,11 +26,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const { userId, uuid } = payload
     // 校验 Redis 中的 AccessToken 是否存在（可吊销）
     const redisToken = await this.redisService.get(`${RedisConstant.ACCESS_TOKEN_KEY}:${userId}:${uuid}`)
-    if (!redisToken) throw new BusinessException('访问凭证已过期或不存在')
+    if (!redisToken) throw new BusinessException('访问凭证已过期或不存在', HttpStatus.UNAUTHORIZED)
     // 从请求头中提取 AccessToken
     const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(request)
     if (!this.allowMultiDevice && accessToken !== redisToken) {
-      throw new BusinessException('您的账号已在其它设备登录，如非本人操作，为确保账号安全建议重新登录并立即修改密码。')
+      throw new BusinessException('您的账号已在其它设备登录，如非本人操作，为确保账号安全建议重新登录并立即修改密码。', HttpStatus.UNAUTHORIZED)
     }
     // 自动续期缓存（best-effort，不阻塞请求，失败仅打日志不影响认证结果）
     this.expire(userId, uuid)

@@ -38,23 +38,23 @@
 
 ## 🚀 技术选型
 
-| 层级          | 技术栈                  | 说明                                           |
-| ------------- | ----------------------- | ---------------------------------------------- |
-| **前端框架**  | Vue 3 + Composition API | 最新 Vue 生态，`<script setup lang="ts">` 语法 |
-| **前端路由**  | Vue Router 5            | 动态路由 + 权限过滤，从后端实时拉取菜单        |
-| **状态管理**  | Pinia 3                 | 轻量级、类型友好的状态管理                     |
-| **UI 组件库** | Element Plus 2          | 全套企业级 UI 组件，按需导入                   |
-| **构建工具**  | Vite 8 + Rolldown       | 秒级冷启动，Oxc 压缩                           |
-| **CSS 方案**  | SCSS + BEM 命名         | 语义化样式，Dark Mode 支持                     |
-| **图表库**    | ECharts 6               | 服务监控可视化大屏                             |
-| **后端框架**  | NestJS 11               | 行业标准的 Node.js 企业级框架                  |
-| **ORM**       | TypeORM                 | 数据库实体映射，支持 Migration                 |
-| **数据库**    | MySQL 8                 | 核心业务数据存储                               |
-| **缓存**      | Redis 7                 | Token 缓存、接口缓存、BullMQ 队列              |
-| **消息队列**  | BullMQ                  | 定时任务调度执行                               |
-| **认证**      | JWT + 图片验证码        | Argon2 密码加密，安全可靠                      |
-| **日志**      | Winston                 | 按日滚动文件日志                               |
-| **容器化**    | Docker + Nginx          | 多阶段构建 + 健康探针 + Nginx 反向代理         |
+| 层级          | 技术栈                      | 说明                                           |
+| ------------- | --------------------------- | ---------------------------------------------- |
+| **前端框架**  | Vue 3 + Composition API     | 最新 Vue 生态，`<script setup lang="ts">` 语法 |
+| **前端路由**  | Vue Router 5                | 动态路由 + 权限过滤，从后端实时拉取菜单        |
+| **状态管理**  | Pinia 3                     | 轻量级、类型友好的状态管理                     |
+| **UI 组件库** | Element Plus 2              | 全套企业级 UI 组件，按需导入                   |
+| **构建工具**  | Vite 8 + Rolldown           | 秒级冷启动，Oxc 压缩                           |
+| **CSS 方案**  | SCSS + BEM 命名             | 语义化样式，Dark Mode 支持                     |
+| **图表库**    | ECharts 6                   | 服务监控可视化大屏                             |
+| **后端框架**  | NestJS 11                   | 行业标准的 Node.js 企业级框架                  |
+| **ORM**       | TypeORM                     | 数据库实体映射，支持 Migration                 |
+| **数据库**    | MySQL 8                     | 核心业务数据存储                               |
+| **缓存**      | Redis 7                     | Token 缓存、接口缓存、BullMQ 队列              |
+| **消息队列**  | BullMQ                      | 定时任务调度执行                               |
+| **认证**      | Passport + JWT + 图片验证码 | Argon2 密码加密，策略模式可扩展 OAuth          |
+| **日志**      | Winston                     | 按日滚动文件日志                               |
+| **容器化**    | Docker + Nginx              | 多阶段构建 + 健康探针 + Nginx 反向代理         |
 
 ---
 
@@ -128,7 +128,8 @@ YunHe-Vue/
 │       ├── src/
 │       │   ├── common/         # 通用层（守卫 / 拦截器 / 过滤器 / 装饰器 / Entity）
 │       │   ├── modules/        # 业务模块
-│       │   │   ├── auth/       #   → 认证模块（登录 / 验证码 / 路由）
+│       │   │   ├── auth/       #   → 认证模块（登录 / 验证码 / 路由 / Passport 策略）
+│       │   │   │   └── strategies/  #   → Passport 认证策略
 │       │   │   ├── system/     #   → 系统模块（用户 / 角色 / 菜单 / 字典）
 │       │   │   ├── monitor/    #   → 监控模块（服务 / 缓存 / 定时任务 / 日志）
 │       │   │   └── common/     #   → 公共模块（上传 / 邮件 / Excel）
@@ -290,6 +291,13 @@ pnpm dev:admin
 
 ### 2. 后端 RBAC 权限模型
 
+云禾后端的认证与鉴权完全分离：
+
+- **认证**由 Passport JWT 策略负责——验签、Redis 核验、Token 续期、多设备控制
+- **鉴权**由 RoleAuthGuard + PermissionAuthGuard 负责——角色与按钮权限校验
+
+#### 五表设计
+
 云禾后端采用经典的 **RBAC（基于角色的访问控制）** 五表设计：
 
 ```
@@ -357,7 +365,7 @@ pnpm dev:admin
 3. **搞懂路由** → 理解动态路由机制，知道菜单表怎么变成侧边栏
 4. **学会 CRUD** → 以"字典管理"为范例，看懂前后端完整增删改查链路
 5. **掌握部署** → 看懂 `Dockerfile` 和 `docker-compose.yaml`，理解多阶段构建
-6. **深入原理** → 学 JWT 鉴权、Redis 缓存策略、BullMQ 消息队列、流式文件合并
+6. **深入原理** → 学 Passport JWT 鉴权策略、Redis 缓存策略、BullMQ 消息队列、流式文件合并
 
 ## 📄 许可证
 

@@ -1,7 +1,7 @@
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
-import { Injectable, ExecutionContext } from '@nestjs/common'
 import { DecoratorConstant, BusinessException } from '@/common'
+import { Injectable, ExecutionContext, HttpStatus } from '@nestjs/common'
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -18,7 +18,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(error: any, user: any, info: any) {
-    if (error || !user) throw new BusinessException('登录已过期，请重新登录')
+    if (error || !user) throw new BusinessException('登录已过期，请重新登录', HttpStatus.UNAUTHORIZED)
     return user
   }
 }
