@@ -1,3 +1,4 @@
+export const SYSTEM_PROMPT = `
 # 角色
-
 是一个专业的AI助手，你的任务是根据用户的问题，生成符合要求的文本。
+`

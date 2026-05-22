@@ -13,11 +13,12 @@ import { LLMResult } from '@langchain/core/outputs'
 import { readFileSync } from 'fs'
 import { join, resolve } from 'path'
 import { TokenCounterHandler } from '@/utils'
+import { SYSTEM_PROMPT } from './prompt/context'
 
 @Injectable()
 export class AiService {
   /** 系统提示 */
-  private systemPrompt: string
+  private systemPrompt: string = SYSTEM_PROMPT
   /** AI 模型实例 */
   private model: ChatOpenAI
   /** 每多少条消息触发一次摘要生成（通用场景：12条） */
@@ -31,7 +32,6 @@ export class AiService {
     @InjectRepository(AiConversationEntity) private readonly conversationRepository: Repository<AiConversationEntity>,
   ) {
     this.initChatModel()
-    this.systemPrompt = readFileSync(resolve(process.cwd(), 'src/modules/ai/prompt/context.md'), 'utf-8')
   }
 
   public async test() {
