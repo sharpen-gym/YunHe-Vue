@@ -1,5 +1,5 @@
 <template>
-  <el-container class="ai-wrapper h-full flex flex-col">
+  <el-container class="ai-wrapper h-full overflow-hidden">
     <SideConversation />
     <el-container>
       <el-main>

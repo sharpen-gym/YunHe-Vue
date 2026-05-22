@@ -157,10 +157,9 @@ export class AiService {
    * 发送 SSE DONE 事件
    */
   private sendDoneEvent(response: ExpressResponse, conversationId: string) {
-    if (!response.writableEnded) {
-      response.write(`data: ${JSON.stringify({ status: 'DONE', conversationId })}\n\n`)
-      response.end()
-    }
+    if (!response.headersSent || !response.writable) return
+    response.write(`data: ${JSON.stringify({ status: 'DONE', conversationId })}\n\n`)
+    response.end()
   }
 
   /* -------------------------------------------------------------------------- */
@@ -242,8 +241,9 @@ export class AiService {
 
   /** 处理错误响应 */
   private setErrorResponse(response: ExpressResponse, message: string) {
+    if (!response.headersSent || !response.writable) return
     response.write(`data: ${JSON.stringify({ content: message })}\n\n`)
-    if (!response.writableEnded) response.write(`data: ${JSON.stringify({ status: 'DONE' })}\n\n`)
-    if (!response.writableEnded) response.end()
+    response.write(`data: ${JSON.stringify({ status: 'DONE' })}\n\n`)
+    response.end()
   }
 }

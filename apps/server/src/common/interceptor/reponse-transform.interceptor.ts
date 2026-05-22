@@ -32,7 +32,7 @@ export class ReponseTransformInterceptor implements NestInterceptor {
         const requestId = request[CommonConstant.REQUEST_ID_KEY] // 从请求上下文获取请求 ID
         const result = { code: HttpStatus.OK, success: true, message: '请求成功', requestId, data }
         result['timestamp'] = Date.now()
-        response.header('Content-Type', 'application/json; charset=utf-8')
+        if (!response.headersSent) response.header('Content-Type', 'application/json; charset=utf-8')
 
         // 使用 AjaxResult 封装最终响应
         return AjaxResult.success(result)
