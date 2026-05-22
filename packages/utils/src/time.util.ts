@@ -35,3 +35,13 @@ export function getWeekDay(date: dayjs.ConfigType = dayjs()) {
   const day = dayjs(date).day()
   return weekMap[day]
 }
+
+/**
+ * 计算两个日期的天数差（目标日期 - 当前日期）
+ * @param target - 目标日期
+ * @param current - 当前日期，默认为今天
+ * @returns 正数：目标在未来；负数：目标在过去；0：就是今天
+ */
+export function getDaysDiff(target: dayjs.ConfigType, current: dayjs.ConfigType = dayjs()): number {
+  return dayjs(target).diff(dayjs(current), 'day')
+}

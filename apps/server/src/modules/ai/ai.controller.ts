@@ -7,11 +7,11 @@ import { Body, Controller, Delete, Get, Post, Put, Query, Res } from '@nestjs/co
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 
-  // @Public()
-  // @Get()
-  // public test() {
-  //   return this.aiService.test()
-  // }
+  @Public()
+  @Get()
+  public test() {
+    return this.aiService.test()
+  }
 
   @Post('chat/stream')
   public chatStream(@Body() chatDto: ChatDto, @CurrentUser('userId') userId: string, @Res({ passthrough: true }) response: ExpressResponse) {

@@ -12,6 +12,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ElAside: typeof import('element-plus/es')['ElAside']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -21,6 +22,7 @@ declare module 'vue' {
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
+    ElContainer: typeof import('element-plus/es')['ElContainer']
     ElCountdown: typeof import('element-plus/es')['ElCountdown']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
@@ -31,11 +33,13 @@ declare module 'vue' {
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
+    ElFooter: typeof import('element-plus/es')['ElFooter']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElLink: typeof import('element-plus/es')['ElLink']
+    ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
@@ -71,6 +75,7 @@ declare module 'vue' {
 
 // For TSX support
 declare global {
+  const ElAside: typeof import('element-plus/es')['ElAside']
   const ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
   const ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
   const ElButton: typeof import('element-plus/es')['ElButton']
@@ -80,6 +85,7 @@ declare global {
   const ElCollapse: typeof import('element-plus/es')['ElCollapse']
   const ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
   const ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
+  const ElContainer: typeof import('element-plus/es')['ElContainer']
   const ElCountdown: typeof import('element-plus/es')['ElCountdown']
   const ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
   const ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
@@ -90,11 +96,13 @@ declare global {
   const ElDropdown: typeof import('element-plus/es')['ElDropdown']
   const ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
   const ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
+  const ElFooter: typeof import('element-plus/es')['ElFooter']
   const ElForm: typeof import('element-plus/es')['ElForm']
   const ElFormItem: typeof import('element-plus/es')['ElFormItem']
   const ElInput: typeof import('element-plus/es')['ElInput']
   const ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
   const ElLink: typeof import('element-plus/es')['ElLink']
+  const ElMain: typeof import('element-plus/es')['ElMain']
   const ElMenu: typeof import('element-plus/es')['ElMenu']
   const ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
   const ElOption: typeof import('element-plus/es')['ElOption']

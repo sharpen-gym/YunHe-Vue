@@ -24,16 +24,18 @@ export function isStringNumber(value: unknown): boolean {
 }
 
 /**
- * 判断字符串是否为有效的 JSON 格式
+ * 判断字符串是否为合法的 JSON 对象或数组格式
  * @param value - 待判断的值
- * @returns boolean
+ * @returns 是合法 JSON 对象/数组则返回 true，原始值（如字符串、数字）返回 false
  */
 export function isJsonString(value: unknown): boolean {
   try {
     if (typeof value !== 'string') return false
     const trimmedValue = value.trim()
     if (trimmedValue === '') return false
-    if (trimmedValue[0] !== '{' && trimmedValue[0] !== '[') return false
+    const first = trimmedValue[0]
+    const last = trimmedValue[trimmedValue.length - 1]
+    if ((first !== '{' || last !== '}') && (first !== '[' || last !== ']')) return false
     JSON.parse(trimmedValue)
     return true
   } catch {

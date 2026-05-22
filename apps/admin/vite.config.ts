@@ -147,6 +147,9 @@ export default defineConfig(({ mode }) => {
       // 预构建依赖（将常用第三方依赖提前构建，提升冷启动速度）
       include: [
         'element-plus/es/components/base/style/index',
+        'element-plus/es/components/skeleton/style/index',
+        'element-plus/es/components/tabs/style/index',
+        'element-plus/es/components/tab-pane/style/index',
         'element-plus/es/components/tree/style/index',
         'element-plus/es/components/tree-select/style/index',
         'element-plus/es/components/popover/style/index',

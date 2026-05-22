@@ -126,6 +126,7 @@ declare global {
   const until: typeof import('@vueuse/core').until
   const useActiveElement: typeof import('@vueuse/core').useActiveElement
   const useAiStore: typeof import('../../src/store/modules/ai').useAiStore
+  const useAiStream: typeof import('../../src/hooks/useAiStream').useAiStream
   const useAnimate: typeof import('@vueuse/core').useAnimate
   const useAppStore: typeof import('../../src/store/modules/app').useAppStore
   const useArrayDifference: typeof import('@vueuse/core').useArrayDifference
@@ -155,6 +156,7 @@ declare global {
   const useCloned: typeof import('@vueuse/core').useCloned
   const useColorMode: typeof import('@vueuse/core').useColorMode
   const useConfirmDialog: typeof import('@vueuse/core').useConfirmDialog
+  const useCountTransition: typeof import('../../src/hooks/useCountTransition').useCountTransition
   const useCountdown: typeof import('@vueuse/core').useCountdown
   const useCounter: typeof import('@vueuse/core').useCounter
   const useCssModule: typeof import('vue').useCssModule

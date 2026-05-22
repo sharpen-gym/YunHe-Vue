@@ -10,10 +10,14 @@ import { tools } from './tools'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Equal, Repository } from 'typeorm'
 import { LLMResult } from '@langchain/core/outputs'
+import { readFileSync } from 'fs'
+import { join, resolve } from 'path'
 import { TokenCounterHandler } from '@/utils'
 
 @Injectable()
 export class AiService {
+  /** 系统提示 */
+  private systemPrompt: string
   /** AI 模型实例 */
   private model: ChatOpenAI
   /** 每多少条消息触发一次摘要生成（通用场景：12条） */
@@ -27,59 +31,22 @@ export class AiService {
     @InjectRepository(AiConversationEntity) private readonly conversationRepository: Repository<AiConversationEntity>,
   ) {
     this.initChatModel()
+    this.systemPrompt = readFileSync(resolve(process.cwd(), 'src/modules/ai/prompt/context.md'), 'utf-8')
   }
 
-  // public async test() {
-  //   const messages = [new SystemMessage('你是一个专业的天气助手'), new HumanMessage('北京的天气怎么样？')]
-  //   const result = await this.agent.invoke({
-  //     messages,
-  //   })
-  //   console.log('result: ', result)
-  //   return result
-  // }
+  public async test() {
+    const keyword = '北京的天气怎么样？'
+    const response = await this.model.invoke(keyword)
+    return response.content
+  }
 
   /** AI 流式对话 */
   public async streamChat(chatDto: ChatDto, userId: string, response: ExpressResponse) {
     try {
-      // 从 DTO 中获取会话ID（不传=新建）
-      let finalConversationId = chatDto.conversationId
-      let fullAiReply = ''
-      const userContent = chatDto.message
-      // 无会话ID → 自动新建会话
-      if (!finalConversationId) {
-        const conversation = new AiConversationEntity()
-        conversation.userId = userId
-        conversation.title = userContent.slice(0, 20) // 标题取前20字
-        conversation.status = CommonConstant.STATUS_NORMAL
-        const savedConversation = await this.conversationRepository.save(conversation)
-        finalConversationId = savedConversation.id
-      }
-      // 保存用户消息到数据库
-      const userMessageId = await this.saveMessage(finalConversationId, 'user', userContent)
-      // 构建最优上下文：缓存摘要 + 最新 RECENT_MESSAGE_COUNT 条消息对话
-      const langChainMessages = await this.buildContextMessages(finalConversationId)
-      // 流式调用 AI
-      const chatPrompt = ChatPromptTemplate.fromMessages(langChainMessages)
-      const chain = chatPrompt.pipe(this.model)
-      const tokenCounter = new TokenCounterHandler()
-      const stream = await chain.stream({}, { callbacks: [tokenCounter] })
-      // 流式输出
-      for await (const chunk of stream) {
-        const content = chunk?.content || ''
-        fullAiReply += content
-        if (!content) continue
-        response.write(`data: ${JSON.stringify({ content, conversationId: finalConversationId })}\n\n`)
-      }
-      // 入库 Token 记录
-      await this.saveMessage(finalConversationId, 'assistant', fullAiReply, tokenCounter.completionTokens)
-      await this.messageRepository.update(userMessageId, { tokens: tokenCounter.promptTokens })
-      // 懒更新摘要
-      await this.lazyUpdateSummary(finalConversationId)
-      // 结束响应
-      if (!response.writableEnded) {
-        response.write(`data: ${JSON.stringify({ status: 'DONE', conversationId: finalConversationId })}\n\n`)
-        response.end()
-      }
+      const ctx = await this.prepareStreamContext(chatDto, userId)
+      const { fullAiReply, tokenCounter } = await this.runStream(ctx.messages, ctx.conversationId, response)
+      await this.finalizeStream(ctx, fullAiReply, tokenCounter)
+      this.sendDoneEvent(response, ctx.conversationId)
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : '未知错误'
       this.setErrorResponse(response, errMsg)
@@ -94,6 +61,8 @@ export class AiService {
 
   /** 删除会话 */
   public async deleteConversation(conversationId: string) {
+    // const count = await this.conversationRepository.count()
+    // if (count === 1) throw new BusinessException('至少保留一个会话')
     await this.conversationRepository.delete(conversationId)
     await this.messageRepository.delete({ conversationId })
     return '删除成功'
@@ -124,6 +93,79 @@ export class AiService {
     queryBuilder.orderBy('message.createTime', 'ASC')
     return queryBuilder.getMany()
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                            Stream Chat Pipeline                            */
+  /* -------------------------------------------------------------------------- */
+
+  /**
+   * 准备流式对话上下文
+   * — 取/建会话 → 保存用户消息 → 构建 AI 消息上下文
+   */
+  private async prepareStreamContext(chatDto: ChatDto, userId: string) {
+    const userContent = chatDto.message
+    const conversationId = await this.ensureConversation(chatDto, userId, userContent)
+    const userMessageId = await this.saveMessage(conversationId, 'user', userContent)
+    const messages = await this.buildContextMessages(conversationId)
+    return { conversationId, userMessageId, messages }
+  }
+
+  /**
+   * 执行流式 LLM 调用并写 SSE
+   * — prompt → chain.stream() → for await → response.write
+   */
+  private async runStream(messages: BaseMessage[], conversationId: string, response: ExpressResponse) {
+    const chatPrompt = ChatPromptTemplate.fromMessages(messages)
+    const chain = chatPrompt.pipe(this.model)
+    const tokenCounter = new TokenCounterHandler()
+    const stream = await chain.stream({}, { callbacks: [tokenCounter] })
+    let fullAiReply = ''
+    for await (const chunk of stream) {
+      const content = chunk?.content || ''
+      fullAiReply += content
+      if (!content) continue
+      response.write(`data: ${JSON.stringify({ content, conversationId })}\n\n`)
+    }
+    return { fullAiReply, tokenCounter }
+  }
+
+  /**
+   * 收尾阶段
+   * — 保存 AI 回复 → 更新用户消息 Token → 懒更新摘要
+   */
+  private async finalizeStream(ctx: { conversationId: string; userMessageId: string }, fullAiReply: string, tokenCounter: TokenCounterHandler) {
+    await this.saveMessage(ctx.conversationId, 'assistant', fullAiReply, tokenCounter.completionTokens)
+    await this.messageRepository.update(ctx.userMessageId, { tokens: tokenCounter.promptTokens })
+    await this.lazyUpdateSummary(ctx.conversationId)
+  }
+
+  /**
+   * 确保会话存在
+   * — 有 conversationId 直接返回，否则新建
+   */
+  private async ensureConversation(chatDto: ChatDto, userId: string, userContent: string): Promise<string> {
+    if (chatDto.conversationId) return chatDto.conversationId
+    const conversation = new AiConversationEntity()
+    conversation.userId = userId
+    conversation.title = userContent.slice(0, 20)
+    conversation.status = CommonConstant.STATUS_NORMAL
+    const saved = await this.conversationRepository.save(conversation)
+    return saved.id
+  }
+
+  /**
+   * 发送 SSE DONE 事件
+   */
+  private sendDoneEvent(response: ExpressResponse, conversationId: string) {
+    if (!response.writableEnded) {
+      response.write(`data: ${JSON.stringify({ status: 'DONE', conversationId })}\n\n`)
+      response.end()
+    }
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                              Private Handlers                               */
+  /* -------------------------------------------------------------------------- */
 
   /** 初始化聊天模型 */
   private initChatModel() {
@@ -178,7 +220,7 @@ export class AiService {
     const latestMessages = await msgQuery.getMany()
     const recent = latestMessages.reverse()
     // 3. 组装最终上下文
-    const msgs: BaseMessage[] = []
+    const msgs: BaseMessage[] = [new SystemMessage(this.systemPrompt)]
     if (summary) msgs.push(new SystemMessage(summary))
     for (const msg of recent) {
       if (msg.role === 'user') msgs.push(new HumanMessage(msg.content))

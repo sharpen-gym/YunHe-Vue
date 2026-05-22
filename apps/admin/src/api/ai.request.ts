@@ -1,6 +1,6 @@
 import { request } from '@/utils/request'
 import type { AxiosRequestConfig } from 'axios'
-import type { Conversation, SendMessage, Message, UpdateConversationTitleParams } from '@/types'
+import type { ConversationEntity, SendMessage, MessageEntity, UpdateConversationTitleParams } from '@/types'
 
 export abstract class AiRequest {
   static sendMessage(data: SendMessage, config: AxiosRequestConfig = {}): Promise<ReadableStream> {
@@ -20,12 +20,12 @@ export abstract class AiRequest {
   }
 
   /** 查询用户会话列表 */
-  static getConversations(): Promise<Conversation[]> {
+  static getConversations(): Promise<ConversationEntity[]> {
     return request.get('/ai/conversation/list')
   }
 
   /** 查询会话消息列表 */
-  static getMessages(params: { conversationId: string }): Promise<Message[]> {
+  static getMessages(params: { conversationId: string }): Promise<MessageEntity[]> {
     return request.get(`/ai/message/list`, { params })
   }
 }

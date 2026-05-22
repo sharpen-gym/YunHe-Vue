@@ -8,7 +8,7 @@ export interface SendMessage {
 }
 
 /** 会话信息 */
-export interface Conversation {
+export interface ConversationEntity {
   /** 会话ID */
   id: string
   /** 用户ID */
@@ -24,7 +24,7 @@ export interface Conversation {
 }
 
 /** 会话消息 */
-export interface Message {
+export interface MessageEntity {
   /** 消息ID */
   id: string
   /** 会话ID */
@@ -37,6 +37,8 @@ export interface Message {
   content: string
   /** 消息创建时间 */
   createTime: string
+  /** 是否正在加载中 */
+  loading: boolean
 }
 
 export interface UpdateConversationTitleParams {
