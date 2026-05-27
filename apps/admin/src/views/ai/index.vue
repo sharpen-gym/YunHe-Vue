@@ -91,6 +91,12 @@ onMounted(() => {
   }
 }
 
+// 输入框
+:deep() .chat-rich-text.chat-scroll {
+  max-height: 160px;
+  overflow-y: auto;
+}
+
 // 会话区域
 
 .elx-bubble-list {

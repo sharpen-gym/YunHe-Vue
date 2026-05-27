@@ -16,6 +16,9 @@ export const CacheConstant = {
   /** 定义保存用户登录信息的缓存键 */
   REMEMBER_PASSWORD: `${CACHE_PREFIX}:REMEMBER:PASSWORD`,
 
+  /** 登录参数缓存键 */
+  LOGIN_PARAMS: `${CACHE_PREFIX}:LOGIN:PARAMS`,
+
   /** 多标签模式 历史记录 */
   VISITED_VIEWS: `${CACHE_PREFIX}:TAGSVIEW:VISITED`,
 

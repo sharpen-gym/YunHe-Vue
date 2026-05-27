@@ -1,19 +1,17 @@
 import { AiConversationEntity, AiMessageEntity, BusinessException, CommonConstant, ConfigConstant } from '@/common'
 import { Injectable } from '@nestjs/common'
-import { ChatDto, CreateConversationDto, UpdateConversationTitleDto } from './ai.dto'
+import { ChatDto, UpdateConversationTitleDto } from './ai.dto'
 import { ConfigService } from '@nestjs/config'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { ChatOpenAI, ChatOpenAIFields } from '@langchain/openai'
 import { HumanMessage, SystemMessage, BaseMessage, AIMessage } from '@langchain/core/messages'
-import { createAgent, CreateAgentParams } from 'langchain'
 import { tools } from './tools'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Equal, Repository } from 'typeorm'
-import { LLMResult } from '@langchain/core/outputs'
-import { readFileSync } from 'fs'
-import { join, resolve } from 'path'
 import { TokenCounterHandler } from '@/utils'
 import { SYSTEM_PROMPT } from './prompt/context'
+import { formatMessagesAsText } from './ai.helper'
+import { StringOutputParser } from '@langchain/core/output_parsers'
 
 @Injectable()
 export class AiService {
@@ -32,12 +30,6 @@ export class AiService {
     @InjectRepository(AiConversationEntity) private readonly conversationRepository: Repository<AiConversationEntity>,
   ) {
     this.initChatModel()
-  }
-
-  public async test() {
-    const keyword = '北京的天气怎么样？'
-    const response = await this.model.invoke(keyword)
-    return response.content
   }
 
   /** AI 流式对话 */
@@ -187,23 +179,26 @@ export class AiService {
     // 小于触发阈值 → 不生成
     if (count < this.SUMMARY_TRIGGER_COUNT) return
     // 纯常量计算：每N条更新一次
-    if (!((count - this.SUMMARY_TRIGGER_COUNT) % this.RECENT_MESSAGE_COUNT === 0)) return
+    if (!((count - this.SUMMARY_TRIGGER_COUNT) % this.SUMMARY_TRIGGER_COUNT === 0)) return
     // 生成并更新摘要
     const summary = await this.generateSummary(conversationId)
     await this.conversationRepository.update(conversationId, { summary })
   }
 
-  /** 生成对话摘要（仅懒更新时调用） */
+  /** 生成对话摘要（增量压缩：旧摘要 + 最近消息 → 新摘要） */
   private async generateSummary(conversationId: string): Promise<string> {
-    const queryBuilder = this.messageRepository.createQueryBuilder('message')
-    queryBuilder.where('message.conversationId = :conversationId', { conversationId })
-    queryBuilder.orderBy('message.createTime', 'ASC')
-    const messages = await queryBuilder.getMany()
-    const text = messages.map((m) => `${m.role}: ${m.content}`).join('\n')
-    const prompt = ChatPromptTemplate.fromTemplate(`将以下对话压缩为简洁摘要，仅保留核心信息：{text}`)
-    const chain = prompt.pipe(this.model)
-    const result = await chain.invoke({ text })
-    return result.content as string
+    const conversation = await this.conversationRepository.findOneBy({ id: conversationId })
+    const existingSummary = conversation?.summary || ''
+    const msgQuery = this.messageRepository.createQueryBuilder('message')
+    msgQuery.where('message.conversationId = :conversationId', { conversationId })
+    msgQuery.orderBy('message.createTime', 'DESC')
+    msgQuery.take(this.SUMMARY_TRIGGER_COUNT)
+    const recent = await msgQuery.getMany()
+    const newText = formatMessagesAsText(recent.reverse())
+    const templateText = existingSummary ? `将以下新旧内容合并为一段简洁摘要，仅保留核心信息：\n【已有摘要】\n{existingSummary}\n\n【新增对话】\n{newText}` : `将以下对话压缩为简洁摘要，仅保留核心信息：{newText}`
+    const prompt = ChatPromptTemplate.fromTemplate(templateText)
+    const chain = prompt.pipe(this.model).pipe(new StringOutputParser())
+    return await chain.invoke({ existingSummary, newText })
   }
 
   /** 构建AI上下文：摘要 + 最新 RECENT_MESSAGE_COUNT 条消息 */

@@ -41,20 +41,19 @@
 
     <!--  底部  -->
     <div class="login-footer text-center">
-      <span>Copyright © 2026-{{ dayjs().format('YYYY') }} snowbox All Rights Reserved.</span>
+      <span>Copyright © 2026-{{ formatTime('YYYY') }} snowbox All Rights Reserved.</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({ name: 'Login' })
-import dayjs from 'dayjs'
-import { TipModal } from '@/utils'
-import { getTimeGreeting } from '@yunhe-vue/utils'
 import type { LoginDto } from '@/types'
 import type { FormRules } from 'element-plus'
 import { AuthRequest } from '@/api/auth.request'
+import { getTimeGreeting, formatTime } from '@yunhe-vue/utils'
 import defaultCaptcha from '@/assets/images/default/default-captcha.png'
+import { getLoginParams, removeLoginParams, setLoginParams, TipModal } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -101,6 +100,8 @@ async function handleLogin() {
     loading.value = true
     await loginFormRef.value?.validate()
     await userStore.login(loginForm.value)
+    const { username, password } = loginForm.value
+    rememberMe.value ? setLoginParams({ username, password, rememberMe: rememberMe.value }) : removeLoginParams()
     loading.value = false
     await router.replace(redirect)
     TipModal.notifySuccess(`${getTimeGreeting()}，欢迎回来`, { title: '登录成功' })
@@ -114,6 +115,10 @@ async function handleLogin() {
 
 onMounted(() => {
   getCaptcha()
+  const cacheParams = getLoginParams()
+  if (cacheParams.rememberMe) rememberMe.value = true
+  if (cacheParams.username) loginForm.value.username = cacheParams.username
+  if (cacheParams.password) loginForm.value.password = cacheParams.password
 })
 </script>
 

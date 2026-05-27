@@ -1,4 +1,4 @@
-import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from 'langchain'
+import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from '@langchain/core/messages'
 
 /**
  * 创建人类消息

@@ -1,4 +1,4 @@
-import { tool } from 'langchain'
+import { tool } from '@langchain/core/tools'
 
 export const get_weather_tool = tool(
   // 实际场景中可替换为真实的接口调用
