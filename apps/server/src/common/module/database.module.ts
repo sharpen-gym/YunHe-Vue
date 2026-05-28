@@ -40,8 +40,10 @@ import { ConfigConstant } from '../constant/config.constant'
           retryAttempts: 10,
           // 数据库连接池大小：10 个连接，优化并发查询性能
           poolSize: 10,
-          // 数据库字符集与排序规则：utf8mb4 支持 emoji 表情，unicode_ci 大小写不敏感
-          charset: configService.get<string>(ConfigConstant.DATABASE_CHARSET, 'utf8mb4_unicode_ci'),
+          // 数据库字符集与排序规则：utf8mb4 支持 emoji 表情，0900_ai_ci 大小写不敏感
+          charset: configService.get<string>(ConfigConstant.DATABASE_CHARSET, 'utf8mb4'),
+          // 数据库排序规则：从配置中读取，默认 utf8mb4_0900_ai_ci
+          collation: configService.get<string>(ConfigConstant.DATABASE_COLLATION, 'utf8mb4_0900_ai_ci'),
           // logging: true,
         }
       },

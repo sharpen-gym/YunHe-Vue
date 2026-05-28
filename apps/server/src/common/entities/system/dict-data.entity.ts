@@ -28,6 +28,6 @@ export class DictDataEntity extends BaseEntity {
   @Column({ comment: '备注', nullable: true })
   remark: string
 
-  @Column({ name: 'dict_type_id', nullable: false, type: 'varchar', length: 36, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
+  @Column({ name: 'dict_type_id', nullable: false, type: 'varchar', length: 36, charset: 'utf8mb4', collation: 'utf8mb4_0900_ai_ci' })
   dictTypeId: string
 }

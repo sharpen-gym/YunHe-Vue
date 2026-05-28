@@ -72,9 +72,15 @@ export const ConfigConstant = {
 
   /**
    * 数据库字符集
-   * 数据库连接的字符集，默认值为 utf8mb4_unicode_ci
+   * 数据库连接的字符集，默认值为 utf8mb4_0900_ai_ci
    */
   DATABASE_CHARSET: 'database.charset',
+
+  /**
+   * 数据库排序规则
+   * 数据库连接的排序规则，默认值为 utf8mb4_0900_ai_ci
+   */
+  DATABASE_COLLATION: 'database.collation',
 
   /**
    * 数据库同步模式
