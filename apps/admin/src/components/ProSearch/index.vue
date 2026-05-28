@@ -65,8 +65,9 @@ const isExpanded = ref<boolean>(props.defaultExpanded)
 
 // 核心：计算收起时显示的输入项数量（每行3个）
 const maxItemsPerRow = computed(() => Math.floor(24 / props.span) - 1)
-const visibleFormItems = computed(() => (isExpanded.value ? props.items : props.items.slice(0, maxItemsPerRow.value)))
-const shouldShowExpandToggle = computed(() => props.items.filter((item) => !item.hidden).length > maxItemsPerRow.value)
+const visibleItems = computed(() => props.items.filter((item) => !item.hidden))
+const visibleFormItems = computed(() => (isExpanded.value ? visibleItems.value : visibleItems.value.slice(0, maxItemsPerRow.value)))
+const shouldShowExpandToggle = computed(() => visibleItems.value.length > maxItemsPerRow.value)
 
 function toggleExpand() {
   isExpanded.value = !isExpanded.value
