@@ -97,6 +97,7 @@ export class MenuService {
   public async findRoutesByRoleIds(roleIds: string[], isAdmin: boolean) {
     const queryBuilder = this.menuRepository.createQueryBuilder('menu')
     queryBuilder.where('menu.menuType != :menuType', { menuType: 'F' })
+    queryBuilder.andWhere('menu.status = :status', { status: CommonConstant.STATUS_NORMAL })
     if (!isAdmin) {
       queryBuilder.innerJoin('menu.roles', 'role')
       queryBuilder.andWhere('role.id IN (:...roleIds)', { roleIds })
@@ -110,6 +111,7 @@ export class MenuService {
   public async findPermissionsByRoleIds(roleIds: string[], isAdmin: boolean): Promise<string[]> {
     const queryBuilder = this.menuRepository.createQueryBuilder('menu')
     queryBuilder.where('menu.menuType = :menuType', { menuType: 'F' })
+    queryBuilder.andWhere('menu.status = :status', { status: CommonConstant.STATUS_NORMAL })
     if (!isAdmin) {
       queryBuilder.innerJoin('menu.roles', 'role')
       queryBuilder.andWhere('role.id IN (:...roleIds)', { roleIds })
