@@ -96,6 +96,9 @@ function getPlaceholder(item: ProSearchItem) {
 // 强制统一表单项的默认下边距
 :deep() .el-form-item {
   margin-bottom: var(--search-item-gap);
+  .el-date-editor {
+    --el-date-editor-width: 100%;
+  }
 }
 
 // 操作表单项
