@@ -31,6 +31,9 @@ services:
       - ./.env
     expose:
       - 3000
+    volumes:
+      - /www/wwwroot/yunhe-vue/logs:/app/logs
+      - /www/wwwroot/yunhe-vue/uploads:/app/uploads
     networks:
       - yunhe-vue
 
