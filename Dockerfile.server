@@ -31,23 +31,14 @@ COPY --from=builder /app/apps/server/dist/ /deploy/
 FROM node:22-alpine
 WORKDIR /app
 
-# 先创建用户和组
-RUN addgroup -S nodejs && adduser -S nestuser -G nodejs
+COPY --from=deployer /deploy .
+COPY scripts/healthcheck.js ./healthcheck.js
 
-# ✅ 关键修复：只保留一条 COPY 指令，并带上 --chown 赋权
-COPY --from=deployer --chown=nestuser:nodejs /deploy .
-COPY --chown=nestuser:nodejs scripts/healthcheck.js ./healthcheck.js
-
-# 时区配置 + 目录创建 + 缓存清理
 RUN apk add --no-cache tzdata && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     apk del tzdata && \
     mkdir -p /app/logs && \
-    chown nestuser:nodejs /app/logs && \
     rm -rf /tmp/* /root/.npm /root/.cache
-
-# 最后切换到非 root 用户
-USER nestuser
 
 # 暴露端口
 EXPOSE 3000
